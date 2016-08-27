@@ -13,7 +13,6 @@
 		9BA9BB5D1D6FEA4C00A579CA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9BA9BB5B1D6FEA4C00A579CA /* Main.storyboard */; };
 		9BA9BB5F1D6FEA4C00A579CA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9BA9BB5E1D6FEA4C00A579CA /* Assets.xcassets */; };
 		9BA9BB621D6FEA4C00A579CA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9BA9BB601D6FEA4C00A579CA /* LaunchScreen.storyboard */; };
-		9BA9BB6B1D700EFB00A579CA /* KSDynamicLinker.c in Sources */ = {isa = PBXBuildFile; fileRef = 9BA9BB691D700EFB00A579CA /* KSDynamicLinker.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,8 +26,6 @@
 		9BA9BB5E1D6FEA4C00A579CA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9BA9BB611D6FEA4C00A579CA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9BA9BB631D6FEA4C00A579CA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9BA9BB691D700EFB00A579CA /* KSDynamicLinker.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = KSDynamicLinker.c; sourceTree = "<group>"; };
-		9BA9BB6A1D700EFB00A579CA /* KSDynamicLinker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KSDynamicLinker.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,8 +62,6 @@
 				9BA9BB561D6FEA4C00A579CA /* AppDelegate.m */,
 				9BA9BB581D6FEA4C00A579CA /* ViewController.h */,
 				9BA9BB591D6FEA4C00A579CA /* ViewController.m */,
-				9BA9BB6A1D700EFB00A579CA /* KSDynamicLinker.h */,
-				9BA9BB691D700EFB00A579CA /* KSDynamicLinker.c */,
 				9BA9BB5B1D6FEA4C00A579CA /* Main.storyboard */,
 				9BA9BB5E1D6FEA4C00A579CA /* Assets.xcassets */,
 				9BA9BB601D6FEA4C00A579CA /* LaunchScreen.storyboard */,
@@ -157,7 +152,6 @@
 			files = (
 				9BA9BB5A1D6FEA4C00A579CA /* ViewController.m in Sources */,
 				9BA9BB571D6FEA4C00A579CA /* AppDelegate.m in Sources */,
-				9BA9BB6B1D700EFB00A579CA /* KSDynamicLinker.c in Sources */,
 				9BA9BB541D6FEA4C00A579CA /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -311,6 +305,7 @@
 				9BA9BB681D6FEA4C00A579CA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
