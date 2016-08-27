@@ -9,7 +9,7 @@
 
 
 #import "ViewController.h"
-#import "KtBackTraceLogger.h"
+#import "BsBacktraceLogger.h"
 
 #import <pthread.h>
 
@@ -38,9 +38,9 @@
 //        NSLog(@"current = %@",[KtBackTraceLogger backtraceOfCurrentThread]);
 //        NSLog(@"main1 = %@",[KtBackTraceLogger backtraceOfMainThread]);
 //        NSLog(@"main2 = %@",[KtBackTraceLogger backtraceOfNSThread:[NSThread mainThread]]);
-        KTLOG
-        KTLOG_ALL
-        KTLOG_MAIN
+        BSLOG
+        BSLOG_ALL
+        BSLOG_MAIN
     });
     [self foo];
 }

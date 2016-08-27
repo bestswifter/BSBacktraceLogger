@@ -1,12 +1,12 @@
 //
-//  KtBackTraceLogger.m
-//  KtBacktraceLogger
+//  BsBackTraceLogger.m
+//  BsBacbsraceLogger
 //
 //  Created by 张星宇 on 16/8/27.
 //  Copyright © 2016年 bestswifter. All rights reserved.
 //
 
-#import "KtBackTraceLogger.h"
+#import "BsBacktraceLogger.h"
 #import <mach/mach.h>
 #include <dlfcn.h>
 #include <pthread.h>
@@ -19,35 +19,35 @@
 #pragma -mark DEFINE MACRO FOR DIFFERENT CPU ARCHITECTURE
 #if defined(__arm64__)
 #define DETAG_INSTRUCTION_ADDRESS(A) ((A) & ~(3UL))
-#define KT_THREAD_STATE_COUNT ARM_THREAD_STATE64_COUNT
-#define KT_THREAD_STATE ARM_THREAD_STATE64
-#define KT_FRAME_POINTER __fp
-#define KT_STACK_POINTER __sp
-#define KT_INSTRUCTION_ADDRESS __pc
+#define BS_THREAD_STATE_COUNT ARM_THREAD_STATE64_COUNT
+#define BS_THREAD_STATE ARM_THREAD_STATE64
+#define BS_FRAME_POINTER __fp
+#define BS_STACK_POINTER __sp
+#define BS_INSTRUCTION_ADDRESS __pc
 
 #elif defined(__arm__)
 #define DETAG_INSTRUCTION_ADDRESS(A) ((A) & ~(1UL))
-#define KT_THREAD_STATE_COUNT ARM_THREAD_STATE_COUNT
-#define KT_THREAD_STATE ARM_THREAD_STATE
-#define KT_FRAME_POINTER __r[7]
-#define KT_STACK_POINTER __sp
-#define KT_INSTRUCTION_ADDRESS __pc
+#define BS_THREAD_STATE_COUNT ARM_THREAD_STATE_COUNT
+#define BS_THREAD_STATE ARM_THREAD_STATE
+#define BS_FRAME_POINTER __r[7]
+#define BS_STACK_POINTER __sp
+#define BS_INSTRUCTION_ADDRESS __pc
 
 #elif defined(__x86_64__)
 #define DETAG_INSTRUCTION_ADDRESS(A) (A)
-#define KT_THREAD_STATE_COUNT x86_THREAD_STATE64_COUNT
-#define KT_THREAD_STATE x86_THREAD_STATE64
-#define KT_FRAME_POINTER __rbp
-#define KT_STACK_POINTER __rsp
-#define KT_INSTRUCTION_ADDRESS __rip
+#define BS_THREAD_STATE_COUNT x86_THREAD_STATE64_COUNT
+#define BS_THREAD_STATE x86_THREAD_STATE64
+#define BS_FRAME_POINTER __rbp
+#define BS_STACK_POINTER __rsp
+#define BS_INSTRUCTION_ADDRESS __rip
 
 #elif defined(__i386__)
 #define DETAG_INSTRUCTION_ADDRESS(A) (A)
-#define KT_THREAD_STATE_COUNT x86_THREAD_STATE32_COUNT
-#define KT_THREAD_STATE x86_THREAD_STATE32
-#define KT_FRAME_POINTER __ebp
-#define KT_STACK_POINTER __esp
-#define KT_INSTRUCTION_ADDRESS __eip
+#define BS_THREAD_STATE_COUNT x86_THREAD_STATE32_COUNT
+#define BS_THREAD_STATE x86_THREAD_STATE32
+#define BS_FRAME_POINTER __ebp
+#define BS_STACK_POINTER __esp
+#define BS_INSTRUCTION_ADDRESS __eip
 
 #endif
 
@@ -57,29 +57,29 @@
 #define TRACE_FMT         "%-4d%-31s 0x%016lx %s + %lu"
 #define POINTER_FMT       "0x%016lx"
 #define POINTER_SHORT_FMT "0x%lx"
-#define KT_NLIST struct nlist_64
+#define BS_NLIST struct nlist_64
 #else
 #define TRACE_FMT         "%-4d%-31s 0x%08lx %s + %lu"
 #define POINTER_FMT       "0x%08lx"
 #define POINTER_SHORT_FMT "0x%lx"
-#define KT_NLIST struct nlist
+#define BS_NLIST struct nlist
 #endif
 
-typedef struct KtStackFrameEntry{
+typedef struct BsStackFrameEntry{
     const struct SunFrameEntry *const previous;
     const uintptr_t return_address;
-} KtStackFrameEntry;
+} BsStackFrameEntry;
 
 static mach_port_t main_thread_id;
 
-@implementation KtBackTraceLogger
+@implementation BsBacktraceLogger
 
 + (void)load {
     main_thread_id = mach_thread_self();
 }
 
 + (NSString *)backtraceOfNSThread:(NSThread *)thread {
-    return kt_backtraceOfThread(kt_machThreadFromNSThread(thread));
+    return bs_bacbsraceOfThread(bs_machThreadFromNSThread(thread));
 }
 
 + (NSString *)backtraceOfCurrentThread {
@@ -100,30 +100,30 @@ static mach_port_t main_thread_id;
         return @"Fail to get information of all threads";
     }
     
-    NSMutableString *resultString = [NSMutableString stringWithFormat:@"Call Backtrace of %u threads:\n", thread_count];
+    NSMutableString *resultString = [NSMutableString stringWithFormat:@"Call Bacbsrace of %u threads:\n", thread_count];
     for(int i = 0; i < thread_count; i++) {
-        [resultString appendString:kt_backtraceOfThread(threads[i])];
+        [resultString appendString:bs_bacbsraceOfThread(threads[i])];
     }
     return [resultString copy];
 }
 
-NSString *kt_backtraceOfThread(thread_t thread) {
-    uintptr_t backtraceBuffer[50];
+NSString *bs_bacbsraceOfThread(thread_t thread) {
+    uintptr_t bacbsraceBuffer[50];
     int i = 0;
-    NSMutableString *resultString = [[NSMutableString alloc] initWithFormat:@"Backtrace of Thread %u:\n", thread];
+    NSMutableString *resultString = [[NSMutableString alloc] initWithFormat:@"Bacbsrace of Thread %u:\n", thread];
     
     _STRUCT_MCONTEXT machineContext;
-    if(!kt_fillThreadStateIntoMachineContext(thread, &machineContext)) {
+    if(!bs_fillThreadStateIntoMachineContext(thread, &machineContext)) {
         return [NSString stringWithFormat:@"Fail to get information about thread: %u", thread];
     }
     
-    const uintptr_t instructionAddress = kt_mach_instructionAddress(&machineContext);
-    backtraceBuffer[i] = instructionAddress;
+    const uintptr_t instructionAddress = bs_mach_instructionAddress(&machineContext);
+    bacbsraceBuffer[i] = instructionAddress;
     ++i;
     
-    uintptr_t linkRegister = kt_mach_linkRegister(&machineContext);
+    uintptr_t linkRegister = bs_mach_linkRegister(&machineContext);
     if (linkRegister) {
-        backtraceBuffer[i] = linkRegister;
+        bacbsraceBuffer[i] = linkRegister;
         i++;
     }
     
@@ -131,34 +131,34 @@ NSString *kt_backtraceOfThread(thread_t thread) {
         return @"Fail to get instruction address";
     }
     
-    KtStackFrameEntry frame = {0};
-    const uintptr_t framePtr = kt_mach_framePointer(&machineContext);
+    BsStackFrameEntry frame = {0};
+    const uintptr_t framePtr = bs_mach_framePointer(&machineContext);
     if(framePtr == 0 ||
-       kt_mach_copyMem((void *)framePtr, &frame, sizeof(frame)) != KERN_SUCCESS) {
+       bs_mach_copyMem((void *)framePtr, &frame, sizeof(frame)) != KERN_SUCCESS) {
         return @"Fail to get frame pointer";
     }
     
     for(; i < INT_MAX; i++) {
-        backtraceBuffer[i] = frame.return_address;
-        if(backtraceBuffer[i] == 0 ||
+        bacbsraceBuffer[i] = frame.return_address;
+        if(bacbsraceBuffer[i] == 0 ||
            frame.previous == 0 ||
-           kt_mach_copyMem(frame.previous, &frame, sizeof(frame)) != KERN_SUCCESS) {
+           bs_mach_copyMem(frame.previous, &frame, sizeof(frame)) != KERN_SUCCESS) {
             break;
         }
     }
     
-    int backtraceLength = i;
-    Dl_info symbolicated[backtraceLength];
-    kt_symbolicate(backtraceBuffer, symbolicated, backtraceLength, 0);
-    for (int i = 0; i < backtraceLength; ++i) {
-        [resultString appendFormat:@"%@", kt_logBacktraceEntry(i, backtraceBuffer[i], &symbolicated[i])];
+    int bacbsraceLength = i;
+    Dl_info symbolicated[bacbsraceLength];
+    bs_symbolicate(bacbsraceBuffer, symbolicated, bacbsraceLength, 0);
+    for (int i = 0; i < bacbsraceLength; ++i) {
+        [resultString appendFormat:@"%@", bs_logBacbsraceEntry(i, bacbsraceBuffer[i], &symbolicated[i])];
     }
     [resultString appendFormat:@"\n"];
     return [resultString copy];
 }
 
 #pragma -mark Convert NSThread to Mach thread
-thread_t kt_machThreadFromNSThread(NSThread *nsthread) {
+thread_t bs_machThreadFromNSThread(NSThread *nsthread) {
     char name[256];
     mach_msg_type_number_t count;
     thread_act_array_t list;
@@ -193,14 +193,14 @@ thread_t kt_machThreadFromNSThread(NSThread *nsthread) {
     return mach_thread_self();
 }
 
-#pragma -mark GenerateBacktrackEnrty
-NSString* kt_logBacktraceEntry(const int entryNum,
+#pragma -mark GenerateBacbsrackEnrty
+NSString* bs_logBacbsraceEntry(const int entryNum,
                                const uintptr_t address,
                                const Dl_info* const dlInfo) {
     char faddrBuff[20];
     char saddrBuff[20];
     
-    const char* fname = kt_lastPathEntry(dlInfo->dli_fname);
+    const char* fname = bs_lastPathEntry(dlInfo->dli_fname);
     if(fname == NULL) {
         sprintf(faddrBuff, POINTER_FMT, (uintptr_t)dlInfo->dli_fbase);
         fname = faddrBuff;
@@ -216,7 +216,7 @@ NSString* kt_logBacktraceEntry(const int entryNum,
     return [NSString stringWithFormat:@"%-30s  0x%08" PRIxPTR " %s + %lu\n" ,fname, (uintptr_t)address, sname, offset];
 }
 
-const char* kt_lastPathEntry(const char* const path) {
+const char* bs_lastPathEntry(const char* const path) {
     if(path == NULL) {
         return NULL;
     }
@@ -226,25 +226,25 @@ const char* kt_lastPathEntry(const char* const path) {
 }
 
 #pragma -mark HandleMachineContext
-bool kt_fillThreadStateIntoMachineContext(thread_t thread, _STRUCT_MCONTEXT *machineContext) {
-    mach_msg_type_number_t state_count = KT_THREAD_STATE_COUNT;
-    kern_return_t kr = thread_get_state(thread, KT_THREAD_STATE, (thread_state_t)&machineContext->__ss, &state_count);
+bool bs_fillThreadStateIntoMachineContext(thread_t thread, _STRUCT_MCONTEXT *machineContext) {
+    mach_msg_type_number_t state_count = BS_THREAD_STATE_COUNT;
+    kern_return_t kr = thread_get_state(thread, BS_THREAD_STATE, (thread_state_t)&machineContext->__ss, &state_count);
     return (kr == KERN_SUCCESS);
 }
 
-uintptr_t kt_mach_framePointer(mcontext_t const machineContext){
-    return machineContext->__ss.KT_FRAME_POINTER;
+uintptr_t bs_mach_framePointer(mcontext_t const machineContext){
+    return machineContext->__ss.BS_FRAME_POINTER;
 }
 
-uintptr_t kt_mach_stackPointer(mcontext_t const machineContext){
-    return machineContext->__ss.KT_STACK_POINTER;
+uintptr_t bs_mach_stackPointer(mcontext_t const machineContext){
+    return machineContext->__ss.BS_STACK_POINTER;
 }
 
-uintptr_t kt_mach_instructionAddress(mcontext_t const machineContext){
-    return machineContext->__ss.KT_INSTRUCTION_ADDRESS;
+uintptr_t bs_mach_instructionAddress(mcontext_t const machineContext){
+    return machineContext->__ss.BS_INSTRUCTION_ADDRESS;
 }
 
-uintptr_t kt_mach_linkRegister(mcontext_t const machineContext){
+uintptr_t bs_mach_linkRegister(mcontext_t const machineContext){
 #if defined(__i386__) || defined(__x86_64__)
     return 0;
 #else
@@ -252,42 +252,42 @@ uintptr_t kt_mach_linkRegister(mcontext_t const machineContext){
 #endif
 }
 
-kern_return_t kt_mach_copyMem(const void *const src, void *const dst, const size_t numBytes){
+kern_return_t bs_mach_copyMem(const void *const src, void *const dst, const size_t numBytes){
     vm_size_t bytesCopied = 0;
     return vm_read_overwrite(mach_task_self(), (vm_address_t)src, (vm_size_t)numBytes, (vm_address_t)dst, &bytesCopied);
 }
 
 #pragma -mark Symbolicate
-void kt_symbolicate(const uintptr_t* const backtraceBuffer,
+void bs_symbolicate(const uintptr_t* const bacbsraceBuffer,
                     Dl_info* const symbolsBuffer,
                     const int numEntries,
                     const int skippedEntries){
     int i = 0;
     
     if(!skippedEntries && i < numEntries) {
-        kt_dladdr(backtraceBuffer[i], &symbolsBuffer[i]);
+        bs_dladdr(bacbsraceBuffer[i], &symbolsBuffer[i]);
         i++;
     }
     
     for(; i < numEntries; i++) {
-        kt_dladdr(CALL_INSTRUCTION_FROM_RETURN_ADDRESS(backtraceBuffer[i]), &symbolsBuffer[i]);
+        bs_dladdr(CALL_INSTRUCTION_FROM_RETURN_ADDRESS(bacbsraceBuffer[i]), &symbolsBuffer[i]);
     }
 }
 
-bool kt_dladdr(const uintptr_t address, Dl_info* const info) {
+bool bs_dladdr(const uintptr_t address, Dl_info* const info) {
     info->dli_fname = NULL;
     info->dli_fbase = NULL;
     info->dli_sname = NULL;
     info->dli_saddr = NULL;
     
-    const uint32_t idx = kt_imageIndexContainingAddress(address);
+    const uint32_t idx = bs_imageIndexContainingAddress(address);
     if(idx == UINT_MAX) {
         return false;
     }
     const struct mach_header* header = _dyld_get_image_header(idx);
     const uintptr_t imageVMAddrSlide = (uintptr_t)_dyld_get_image_vmaddr_slide(idx);
     const uintptr_t addressWithSlide = address - imageVMAddrSlide;
-    const uintptr_t segmentBase = kt_segmentBaseOfImageIndex(idx) + imageVMAddrSlide;
+    const uintptr_t segmentBase = bs_segmentBaseOfImageIndex(idx) + imageVMAddrSlide;
     if(segmentBase == 0) {
         return false;
     }
@@ -296,9 +296,9 @@ bool kt_dladdr(const uintptr_t address, Dl_info* const info) {
     info->dli_fbase = (void*)header;
     
     // Find symbol tables and get whichever symbol is closest to the address.
-    const KT_NLIST* bestMatch = NULL;
+    const BS_NLIST* bestMatch = NULL;
     uintptr_t bestDistance = ULONG_MAX;
-    uintptr_t cmdPtr = kt_firstCmdAfterHeader(header);
+    uintptr_t cmdPtr = bs_firstCmdAfterHeader(header);
     if(cmdPtr == 0) {
         return false;
     }
@@ -306,7 +306,7 @@ bool kt_dladdr(const uintptr_t address, Dl_info* const info) {
         const struct load_command* loadCmd = (struct load_command*)cmdPtr;
         if(loadCmd->cmd == LC_SYMTAB) {
             const struct symtab_command* symtabCmd = (struct symtab_command*)cmdPtr;
-            const KT_NLIST* symbolTable = (KT_NLIST*)(segmentBase + symtabCmd->symoff);
+            const BS_NLIST* symbolTable = (BS_NLIST*)(segmentBase + symtabCmd->symoff);
             const uintptr_t stringTable = segmentBase + symtabCmd->stroff;
             
             for(uint32_t iSym = 0; iSym < symtabCmd->nsyms; iSym++) {
@@ -339,7 +339,7 @@ bool kt_dladdr(const uintptr_t address, Dl_info* const info) {
     return true;
 }
 
-uintptr_t kt_firstCmdAfterHeader(const struct mach_header* const header) {
+uintptr_t bs_firstCmdAfterHeader(const struct mach_header* const header) {
     switch(header->magic) {
         case MH_MAGIC:
         case MH_CIGAM:
@@ -352,7 +352,7 @@ uintptr_t kt_firstCmdAfterHeader(const struct mach_header* const header) {
     }
 }
 
-uint32_t kt_imageIndexContainingAddress(const uintptr_t address) {
+uint32_t bs_imageIndexContainingAddress(const uintptr_t address) {
     const uint32_t imageCount = _dyld_image_count();
     const struct mach_header* header = 0;
     
@@ -361,7 +361,7 @@ uint32_t kt_imageIndexContainingAddress(const uintptr_t address) {
         if(header != NULL) {
             // Look for a segment command with this address within its range.
             uintptr_t addressWSlide = address - (uintptr_t)_dyld_get_image_vmaddr_slide(iImg);
-            uintptr_t cmdPtr = kt_firstCmdAfterHeader(header);
+            uintptr_t cmdPtr = bs_firstCmdAfterHeader(header);
             if(cmdPtr == 0) {
                 continue;
             }
@@ -388,11 +388,11 @@ uint32_t kt_imageIndexContainingAddress(const uintptr_t address) {
     return UINT_MAX;
 }
 
-uintptr_t kt_segmentBaseOfImageIndex(const uint32_t idx) {
+uintptr_t bs_segmentBaseOfImageIndex(const uint32_t idx) {
     const struct mach_header* header = _dyld_get_image_header(idx);
     
     // Look for a segment command and return the file image address.
-    uintptr_t cmdPtr = kt_firstCmdAfterHeader(header);
+    uintptr_t cmdPtr = bs_firstCmdAfterHeader(header);
     if(cmdPtr == 0) {
         return 0;
     }

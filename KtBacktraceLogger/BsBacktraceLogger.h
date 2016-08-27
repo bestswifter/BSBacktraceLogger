@@ -8,11 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-#define KTLOG NSLog(@"%@",[KtBackTraceLogger backtraceOfCurrentThread]);
-#define KTLOG_MAIN NSLog(@"%@",[KtBackTraceLogger backtraceOfMainThread]);
-#define KTLOG_ALL NSLog(@"%@",[KtBackTraceLogger backtraceOfAllThread]);
+#define BSLOG NSLog(@"%@",[BsBacktraceLogger backtraceOfCurrentThread]);
+#define BSLOG_MAIN NSLog(@"%@",[BsBacktraceLogger backtraceOfMainThread]);
+#define BSLOG_ALL NSLog(@"%@",[BsBacktraceLogger backtraceOfAllThread]);
 
-@interface KtBackTraceLogger : NSObject
+@interface BsBacktraceLogger : NSObject
 
 + (NSString *)backtraceOfAllThread;
 + (NSString *)backtraceOfCurrentThread;
