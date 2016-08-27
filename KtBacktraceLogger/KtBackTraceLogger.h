@@ -10,8 +10,6 @@
 
 @interface KtBackTraceLogger : NSObject
 
-+ (void)printBacktraceOfAllThread;
-
-+ (void)
++ (NSString *)backtraceOfAllThread;
 
 @end

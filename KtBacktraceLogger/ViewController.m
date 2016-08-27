@@ -32,7 +32,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        [KtBackTraceLogger printBacktraceOfAllThread];
+        NSLog(@"%@",[KtBackTraceLogger backtraceOfAllThread]);
     });
     [self foo];
 }

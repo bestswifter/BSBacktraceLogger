@@ -78,7 +78,7 @@ static mach_port_t main_thread_id;
     main_thread_id = mach_thread_self();
 }
 
-+ (void)printBacktraceOfAllThread {
++ (NSString *)backtraceOfAllThread {
     thread_act_array_t threads;
     mach_msg_type_number_t thread_count = 0;
     
@@ -86,24 +86,25 @@ static mach_port_t main_thread_id;
     const thread_t this_thread = mach_thread_self();
     
     kern_return_t kr = task_threads(this_task, &threads, &thread_count);
-    if(kr != KERN_SUCCESS) { return ;}
-    
-    for(int i = 0; i < thread_count; i++) {
-        NSLog(@"打印线程 %u", threads[i]);
-        kt_backtraceThread(threads[i]);
+    if(kr != KERN_SUCCESS) {
+        return @"Fail to ";
     }
     
-    NSLog(@"开始打印主线程 %u", this_thread);
-    kt_backtraceThread(this_thread);
+    NSMutableString *result = [NSMutableString stringWithFormat:@"Call Backtrace of %u threads:\n", thread_count];
+    for(int i = 0; i < thread_count; i++) {
+        [result appendString:[NSString stringWithFormat:@"%@\n",kt_backtraceOfThread(threads[i])]];
+    }
+    return [result copy];
 }
 
-void kt_backtraceThread(thread_t thread) {
+NSString *kt_backtraceOfThread(thread_t thread) {
     uintptr_t backtraceBuffer[50];
     int i = 0;
+    NSMutableString *resultString = [[NSMutableString alloc] initWithFormat:@"Backtrace of Thread %u:\n", thread];
     
     _STRUCT_MCONTEXT machineContext;
     if(!kt_fillThreadStateIntoMachineContext(thread, &machineContext)) {
-        return ;
+        return [NSString stringWithFormat:@"Fail to get information about thread: %u", thread];
     }
     
     const uintptr_t instructionAddress = kt_mach_instructionAddress(&machineContext);
@@ -117,16 +118,15 @@ void kt_backtraceThread(thread_t thread) {
     }
     
     if(instructionAddress == 0) {
-        return ;
+        return @"Fail to get instruction address";
     }
     
     KtStackFrameEntry frame = {0};
     const uintptr_t framePtr = kt_mach_framePointer(&machineContext);
     if(framePtr == 0 ||
        kt_mach_copyMem((void *)framePtr, &frame, sizeof(frame)) != KERN_SUCCESS) {
-        return ;
+        return @"Fail to get frame pointer";
     }
-    
     
     for(; i < INT_MAX; i++) {
         backtraceBuffer[i] = frame.return_address;
@@ -141,8 +141,9 @@ void kt_backtraceThread(thread_t thread) {
     Dl_info symbolicated[backtraceLength];
     kt_symbolicate(backtraceBuffer, symbolicated, backtraceLength, 0);
     for (int i = 0; i < backtraceLength; ++i) {
-        kt_logBacktraceEntry(i, backtraceBuffer[i], &symbolicated[i]);
+        [resultString appendFormat:@"%@", kt_logBacktraceEntry(i, backtraceBuffer[i], &symbolicated[i])];
     }
+    return [resultString copy];
 }
 
 #pragma -mark Convert NSThread to Mach thread
@@ -182,7 +183,7 @@ thread_t machThreadFromNSThread(NSThread *nsthread) {
 }
 
 #pragma -mark GenerateBacktrackEnrty
-void kt_logBacktraceEntry(const int entryNum,
+NSString* kt_logBacktraceEntry(const int entryNum,
                                const uintptr_t address,
                                const Dl_info* const dlInfo) {
     char faddrBuff[20];
@@ -201,7 +202,7 @@ void kt_logBacktraceEntry(const int entryNum,
         sname = saddrBuff;
         offset = address - (uintptr_t)dlInfo->dli_fbase;
     }
-    printf("%-30s  0x%08" PRIxPTR " %s + %lu\n", fname, (uintptr_t)address, sname, offset);
+    return [NSString stringWithFormat:@"%-30s  0x%08" PRIxPTR " %s + %lu\n" ,fname, (uintptr_t)address, sname, offset];
 }
 
 const char* kt_lastPathEntry(const char* const path) {
