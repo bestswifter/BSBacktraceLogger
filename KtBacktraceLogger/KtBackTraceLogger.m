@@ -70,9 +70,15 @@ typedef struct KtStackFrameEntry{
     const uintptr_t return_address;
 } KtStackFrameEntry;
 
+static mach_port_t main_thread_id;
+
 @implementation KtBackTraceLogger
 
-+ (void)printBackTraceOfAllThread {
++ (void)load {
+    main_thread_id = mach_thread_self();
+}
+
++ (void)printBacktraceOfAllThread {
     thread_act_array_t threads;
     mach_msg_type_number_t thread_count = 0;
     
@@ -80,10 +86,8 @@ typedef struct KtStackFrameEntry{
     const thread_t this_thread = mach_thread_self();
     
     kern_return_t kr = task_threads(this_task, &threads, &thread_count);
-    pthread_t pt = pthread_from_mach_thread_np(threads[0]);
     if(kr != KERN_SUCCESS) { return ;}
     
-    NSLog(@"%@", [NSThread callStackSymbols]);
     for(int i = 0; i < thread_count; i++) {
         NSLog(@"打印线程 %u", threads[i]);
         kt_backtraceThread(threads[i]);
@@ -93,13 +97,13 @@ typedef struct KtStackFrameEntry{
     kt_backtraceThread(this_thread);
 }
 
-int kt_backtraceThread(thread_t thread) {
-    uintptr_t backtraceBuffer[40];
+void kt_backtraceThread(thread_t thread) {
+    uintptr_t backtraceBuffer[50];
     int i = 0;
     
     _STRUCT_MCONTEXT machineContext;
     if(!kt_fillThreadStateIntoMachineContext(thread, &machineContext)) {
-        return 0;
+        return ;
     }
     
     const uintptr_t instructionAddress = kt_mach_instructionAddress(&machineContext);
@@ -113,19 +117,18 @@ int kt_backtraceThread(thread_t thread) {
     }
     
     if(instructionAddress == 0) {
-        return 0;
+        return ;
     }
     
     KtStackFrameEntry frame = {0};
     const uintptr_t framePtr = kt_mach_framePointer(&machineContext);
     if(framePtr == 0 ||
        kt_mach_copyMem((void *)framePtr, &frame, sizeof(frame)) != KERN_SUCCESS) {
-        return 0;
+        return ;
     }
     
     
     for(; i < INT_MAX; i++) {
-        NSLog(@"return address = %p", frame.return_address);
         backtraceBuffer[i] = frame.return_address;
         if(backtraceBuffer[i] == 0 ||
            frame.previous == 0 ||
@@ -134,33 +137,48 @@ int kt_backtraceThread(thread_t thread) {
         }
     }
     
-    NSLog(@"i = %d", i);
-    
     int backtraceLength = i;
     Dl_info symbolicated[backtraceLength];
     kt_symbolicate(backtraceBuffer, symbolicated, backtraceLength, 0);
     for (int i = 0; i < backtraceLength; ++i) {
         kt_logBacktraceEntry(i, backtraceBuffer[i], &symbolicated[i]);
     }
-    
-    return i;
 }
 
-static void dumpThreads(void) {
+#pragma -mark Convert NSThread to Mach thread
+thread_t machThreadFromNSThread(NSThread *nsthread) {
     char name[256];
     mach_msg_type_number_t count;
     thread_act_array_t list;
     task_threads(mach_task_self(), &list, &count);
+    
+    NSTimeInterval currentTimestamp = [[NSDate date] timeIntervalSince1970];
+    NSString *originName = [nsthread name];
+    [nsthread setName:[NSString stringWithFormat:@"%f", currentTimestamp]];
+    
+    if ([nsthread isMainThread]) {
+        return (thread_t)main_thread_id;
+    }
+    
     for (int i = 0; i < count; ++i) {
         pthread_t pt = pthread_from_mach_thread_np(list[i]);
+        if ([nsthread isMainThread]) {
+            if (list[i] == main_thread_id) {
+                return list[i];
+            }
+        }
         if (pt) {
             name[0] = '\0';
-            int rc = pthread_getname_np(pt, name, sizeof name);
-            NSLog(@"mach thread %u: getname returned %d: %s", list[i], rc, name);
-        } else {
-            NSLog(@"mach thread %u: no pthread found", list[i]);
+            pthread_getname_np(pt, name, sizeof name);
+            if (!strcmp(name, [nsthread name].UTF8String)) {
+                [nsthread setName:originName];
+                return list[i];
+            }
         }
     }
+    
+    [nsthread setName:originName];
+    return mach_thread_self();
 }
 
 #pragma -mark GenerateBacktrackEnrty
@@ -171,24 +189,19 @@ void kt_logBacktraceEntry(const int entryNum,
     char saddrBuff[20];
     
     const char* fname = kt_lastPathEntry(dlInfo->dli_fname);
-    if(fname == NULL)
-    {
+    if(fname == NULL) {
         sprintf(faddrBuff, POINTER_FMT, (uintptr_t)dlInfo->dli_fbase);
         fname = faddrBuff;
     }
     
     uintptr_t offset = address - (uintptr_t)dlInfo->dli_saddr;
     const char* sname = dlInfo->dli_sname;
-    if(sname == NULL)
-    {
+    if(sname == NULL) {
         sprintf(saddrBuff, POINTER_SHORT_FMT, (uintptr_t)dlInfo->dli_fbase);
         sname = saddrBuff;
         offset = address - (uintptr_t)dlInfo->dli_fbase;
     }
-    printf("%s\n", fname);
-    printf("%p\n", address);
-    printf("name =%s\n", sname);
-    printf("%lu\n\n", offset);
+    printf("%-30s  0x%08" PRIxPTR " %s + %lu\n", fname, (uintptr_t)address, sname, offset);
 }
 
 const char* kt_lastPathEntry(const char* const path) {
