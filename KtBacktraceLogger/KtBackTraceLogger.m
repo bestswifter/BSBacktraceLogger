@@ -83,7 +83,11 @@ static mach_port_t main_thread_id;
 }
 
 + (NSString *)backtraceOfCurrentThread {
-    return kt_backtraceOfThread(mach_thread_self());
+    return [self backtraceOfNSThread:[NSThread currentThread]];
+}
+
++ (NSString *)backtraceOfMainThread {
+    return [self backtraceOfNSThread:[NSThread mainThread]];
 }
 
 + (NSString *)backtraceOfAllThread {

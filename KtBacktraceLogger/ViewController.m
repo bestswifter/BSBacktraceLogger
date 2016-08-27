@@ -32,9 +32,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSLog(@"all = %@",[KtBackTraceLogger backtraceOfAllThread]);
-        NSLog(@"current = %@",[KtBackTraceLogger backtraceOfCurrentThread]);
-        NSLog(@"main = %@",[KtBackTraceLogger backtraceOfNSThread:[NSThread mainThread]]);
+        // You can use class method begun with `backtraceof` if you need to get the NSString result.
+        // Or just you macros begun with `KTLOG` for convenience to print the callstack.
+//        NSLog(@"all = %@",[KtBackTraceLogger backtraceOfAllThread]);
+//        NSLog(@"current = %@",[KtBackTraceLogger backtraceOfCurrentThread]);
+//        NSLog(@"main1 = %@",[KtBackTraceLogger backtraceOfMainThread]);
+//        NSLog(@"main2 = %@",[KtBackTraceLogger backtraceOfNSThread:[NSThread mainThread]]);
+        KTLOG
+        KTLOG_ALL
+        KTLOG_MAIN
     });
     [self foo];
 }
