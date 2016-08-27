@@ -11,5 +11,7 @@
 @interface KtBackTraceLogger : NSObject
 
 + (NSString *)backtraceOfAllThread;
++ (NSString *)backtraceOfCurrentThread;
++ (NSString *)backtraceOfNSThread:(NSThread *)thread;
 
 @end

@@ -78,23 +78,29 @@ static mach_port_t main_thread_id;
     main_thread_id = mach_thread_self();
 }
 
++ (NSString *)backtraceOfNSThread:(NSThread *)thread {
+    return kt_backtraceOfThread(kt_machThreadFromNSThread(thread));
+}
+
++ (NSString *)backtraceOfCurrentThread {
+    return kt_backtraceOfThread(mach_thread_self());
+}
+
 + (NSString *)backtraceOfAllThread {
     thread_act_array_t threads;
     mach_msg_type_number_t thread_count = 0;
-    
-    const task_t this_task     = mach_task_self();
-    const thread_t this_thread = mach_thread_self();
+    const task_t this_task = mach_task_self();
     
     kern_return_t kr = task_threads(this_task, &threads, &thread_count);
     if(kr != KERN_SUCCESS) {
-        return @"Fail to ";
+        return @"Fail to get information of all threads";
     }
     
-    NSMutableString *result = [NSMutableString stringWithFormat:@"Call Backtrace of %u threads:\n", thread_count];
+    NSMutableString *resultString = [NSMutableString stringWithFormat:@"Call Backtrace of %u threads:\n", thread_count];
     for(int i = 0; i < thread_count; i++) {
-        [result appendString:[NSString stringWithFormat:@"%@\n",kt_backtraceOfThread(threads[i])]];
+        [resultString appendString:kt_backtraceOfThread(threads[i])];
     }
-    return [result copy];
+    return [resultString copy];
 }
 
 NSString *kt_backtraceOfThread(thread_t thread) {
@@ -143,11 +149,12 @@ NSString *kt_backtraceOfThread(thread_t thread) {
     for (int i = 0; i < backtraceLength; ++i) {
         [resultString appendFormat:@"%@", kt_logBacktraceEntry(i, backtraceBuffer[i], &symbolicated[i])];
     }
+    [resultString appendFormat:@"\n"];
     return [resultString copy];
 }
 
 #pragma -mark Convert NSThread to Mach thread
-thread_t machThreadFromNSThread(NSThread *nsthread) {
+thread_t kt_machThreadFromNSThread(NSThread *nsthread) {
     char name[256];
     mach_msg_type_number_t count;
     thread_act_array_t list;
