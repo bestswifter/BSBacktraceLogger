@@ -11,8 +11,6 @@
 #import "ViewController.h"
 #import "BsBacktraceLogger.h"
 
-#import <pthread.h>
-
 @interface ViewController ()
 
 @end
@@ -32,15 +30,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        // You can use class method begun with `backtraceof` if you need to get the NSString result.
-        // Or just you macros begun with `KTLOG` for convenience to print the callstack.
-//        NSLog(@"all = %@",[KtBackTraceLogger backtraceOfAllThread]);
-//        NSLog(@"current = %@",[KtBackTraceLogger backtraceOfCurrentThread]);
-//        NSLog(@"main1 = %@",[KtBackTraceLogger backtraceOfMainThread]);
-//        NSLog(@"main2 = %@",[KtBackTraceLogger backtraceOfNSThread:[NSThread mainThread]]);
-        BSLOG
-        BSLOG_ALL
-        BSLOG_MAIN
+        BSLOG  // 打印当前线程的调用栈
+        BSLOG_ALL  // 打印所有线程的调用栈
+        BSLOG_MAIN  // 打印主线程调用栈
+        // 调用 [BsBacktraceLogger backtraceOfCurrentThread] 这一系列的方法可以获取字符串，然后选择上传服务器或者其他处理。
     });
     [self foo];
 }
