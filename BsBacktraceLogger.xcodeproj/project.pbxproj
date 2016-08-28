@@ -11,21 +11,21 @@
 		9BD96D191D71AA630046048A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9BD96D0D1D71AA630046048A /* Assets.xcassets */; };
 		9BD96D1A1D71AA630046048A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9BD96D0E1D71AA630046048A /* LaunchScreen.storyboard */; };
 		9BD96D1B1D71AA630046048A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9BD96D101D71AA630046048A /* Main.storyboard */; };
-		9BD96D1C1D71AA630046048A /* BsBacktraceLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BD96D131D71AA630046048A /* BsBacktraceLogger.m */; };
+		9BD96D1C1D71AA630046048A /* BSBacktraceLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BD96D131D71AA630046048A /* BSBacktraceLogger.m */; };
 		9BD96D1D1D71AA630046048A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9BD96D141D71AA630046048A /* Info.plist */; };
 		9BD96D1E1D71AA630046048A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BD96D151D71AA630046048A /* main.m */; };
 		9BD96D1F1D71AA630046048A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BD96D171D71AA630046048A /* ViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		9BA9BB4F1D6FEA4C00A579CA /* BsBacktraceLogger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BsBacktraceLogger.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9BA9BB4F1D6FEA4C00A579CA /* BSBacktraceLogger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BSBacktraceLogger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BD96D0B1D71AA630046048A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		9BD96D0C1D71AA630046048A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		9BD96D0D1D71AA630046048A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9BD96D0F1D71AA630046048A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9BD96D111D71AA630046048A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		9BD96D121D71AA630046048A /* BsBacktraceLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BsBacktraceLogger.h; sourceTree = "<group>"; };
-		9BD96D131D71AA630046048A /* BsBacktraceLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BsBacktraceLogger.m; sourceTree = "<group>"; };
+		9BD96D121D71AA630046048A /* BSBacktraceLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSBacktraceLogger.h; sourceTree = "<group>"; };
+		9BD96D131D71AA630046048A /* BSBacktraceLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSBacktraceLogger.m; sourceTree = "<group>"; };
 		9BD96D141D71AA630046048A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9BD96D151D71AA630046048A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		9BD96D161D71AA630046048A /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -46,7 +46,7 @@
 		9BA9BB461D6FEA4C00A579CA = {
 			isa = PBXGroup;
 			children = (
-				9BD96D0A1D71AA630046048A /* BsBacktraceLogger */,
+				9BD96D0A1D71AA630046048A /* BSBacktraceLogger */,
 				9BA9BB501D6FEA4C00A579CA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,12 +54,12 @@
 		9BA9BB501D6FEA4C00A579CA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9BA9BB4F1D6FEA4C00A579CA /* BsBacktraceLogger.app */,
+				9BA9BB4F1D6FEA4C00A579CA /* BSBacktraceLogger.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		9BD96D0A1D71AA630046048A /* BsBacktraceLogger */ = {
+		9BD96D0A1D71AA630046048A /* BSBacktraceLogger */ = {
 			isa = PBXGroup;
 			children = (
 				9BD96D0B1D71AA630046048A /* AppDelegate.h */,
@@ -67,22 +67,23 @@
 				9BD96D0D1D71AA630046048A /* Assets.xcassets */,
 				9BD96D0E1D71AA630046048A /* LaunchScreen.storyboard */,
 				9BD96D101D71AA630046048A /* Main.storyboard */,
-				9BD96D121D71AA630046048A /* BsBacktraceLogger.h */,
-				9BD96D131D71AA630046048A /* BsBacktraceLogger.m */,
+				9BD96D121D71AA630046048A /* BSBacktraceLogger.h */,
+				9BD96D131D71AA630046048A /* BSBacktraceLogger.m */,
 				9BD96D141D71AA630046048A /* Info.plist */,
 				9BD96D151D71AA630046048A /* main.m */,
 				9BD96D161D71AA630046048A /* ViewController.h */,
 				9BD96D171D71AA630046048A /* ViewController.m */,
 			);
+			name = BSBacktraceLogger;
 			path = BsBacktraceLogger;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		9BA9BB4E1D6FEA4C00A579CA /* BsBacktraceLogger */ = {
+		9BA9BB4E1D6FEA4C00A579CA /* BSBacktraceLogger */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9BA9BB661D6FEA4C00A579CA /* Build configuration list for PBXNativeTarget "BsBacktraceLogger" */;
+			buildConfigurationList = 9BA9BB661D6FEA4C00A579CA /* Build configuration list for PBXNativeTarget "BSBacktraceLogger" */;
 			buildPhases = (
 				9BA9BB4B1D6FEA4C00A579CA /* Sources */,
 				9BA9BB4C1D6FEA4C00A579CA /* Frameworks */,
@@ -92,9 +93,9 @@
 			);
 			dependencies = (
 			);
-			name = BsBacktraceLogger;
+			name = BSBacktraceLogger;
 			productName = KtBacktraceLogger;
-			productReference = 9BA9BB4F1D6FEA4C00A579CA /* BsBacktraceLogger.app */;
+			productReference = 9BA9BB4F1D6FEA4C00A579CA /* BSBacktraceLogger.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -112,7 +113,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 9BA9BB4A1D6FEA4C00A579CA /* Build configuration list for PBXProject "BsBacktraceLogger" */;
+			buildConfigurationList = 9BA9BB4A1D6FEA4C00A579CA /* Build configuration list for PBXProject "BSBacktraceLogger" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -125,7 +126,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9BA9BB4E1D6FEA4C00A579CA /* BsBacktraceLogger */,
+				9BA9BB4E1D6FEA4C00A579CA /* BSBacktraceLogger */,
 			);
 		};
 /* End PBXProject section */
@@ -152,7 +153,7 @@
 				9BD96D1F1D71AA630046048A /* ViewController.m in Sources */,
 				9BD96D181D71AA630046048A /* AppDelegate.m in Sources */,
 				9BD96D1E1D71AA630046048A /* main.m in Sources */,
-				9BD96D1C1D71AA630046048A /* BsBacktraceLogger.m in Sources */,
+				9BD96D1C1D71AA630046048A /* BSBacktraceLogger.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,10 +268,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				INFOPLIST_FILE = BsBacktraceLogger/Info.plist;
+				INFOPLIST_FILE = BSBacktraceLogger/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = baidu.BsBacktraceLogger;
-				PRODUCT_NAME = BsBacktraceLogger;
+				PRODUCT_BUNDLE_IDENTIFIER = baidu.BSBacktraceLogger;
+				PRODUCT_NAME = BSBacktraceLogger;
 			};
 			name = Debug;
 		};
@@ -279,17 +280,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				INFOPLIST_FILE = BsBacktraceLogger/Info.plist;
+				INFOPLIST_FILE = BSBacktraceLogger/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = baidu.BsBacktraceLogger;
-				PRODUCT_NAME = BsBacktraceLogger;
+				PRODUCT_BUNDLE_IDENTIFIER = baidu.BSBacktraceLogger;
+				PRODUCT_NAME = BSBacktraceLogger;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		9BA9BB4A1D6FEA4C00A579CA /* Build configuration list for PBXProject "BsBacktraceLogger" */ = {
+		9BA9BB4A1D6FEA4C00A579CA /* Build configuration list for PBXProject "BSBacktraceLogger" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9BA9BB641D6FEA4C00A579CA /* Debug */,
@@ -298,7 +299,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9BA9BB661D6FEA4C00A579CA /* Build configuration list for PBXNativeTarget "BsBacktraceLogger" */ = {
+		9BA9BB661D6FEA4C00A579CA /* Build configuration list for PBXNativeTarget "BSBacktraceLogger" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9BA9BB671D6FEA4C00A579CA /* Debug */,

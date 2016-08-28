@@ -1,12 +1,12 @@
 //
-//  BsBackTraceLogger.m
-//  BsBacbsraceLogger
+//  BSBacktraceLogger.m
+//  BSBacktraceLogger
 //
 //  Created by 张星宇 on 16/8/27.
 //  Copyright © 2016年 bestswifter. All rights reserved.
 //
 
-#import "BsBacktraceLogger.h"
+#import "BSBacktraceLogger.h"
 #import <mach/mach.h>
 #include <dlfcn.h>
 #include <pthread.h>
@@ -65,32 +65,32 @@
 #define BS_NLIST struct nlist
 #endif
 
-typedef struct BsStackFrameEntry{
+typedef struct BSStackFrameEntry{
     const struct SunFrameEntry *const previous;
     const uintptr_t return_address;
-} BsStackFrameEntry;
+} BSStackFrameEntry;
 
 static mach_port_t main_thread_id;
 
-@implementation BsBacktraceLogger
+@implementation BSBacktraceLogger
 
 + (void)load {
     main_thread_id = mach_thread_self();
 }
 
-+ (NSString *)backtraceOfNSThread:(NSThread *)thread {
-    return bs_bacbsraceOfThread(bs_machThreadFromNSThread(thread));
++ (NSString *)bs_backtraceOfNSThread:(NSThread *)thread {
+    return _bs_bacbsraceOfThread(bs_machThreadFromNSThread(thread));
 }
 
-+ (NSString *)backtraceOfCurrentThread {
-    return [self backtraceOfNSThread:[NSThread currentThread]];
++ (NSString *)bs_backtraceOfCurrentThread {
+    return [self bs_backtraceOfNSThread:[NSThread currentThread]];
 }
 
-+ (NSString *)backtraceOfMainThread {
-    return [self backtraceOfNSThread:[NSThread mainThread]];
++ (NSString *)bs_backtraceOfMainThread {
+    return [self bs_backtraceOfNSThread:[NSThread mainThread]];
 }
 
-+ (NSString *)backtraceOfAllThread {
++ (NSString *)bs_backtraceOfAllThread {
     thread_act_array_t threads;
     mach_msg_type_number_t thread_count = 0;
     const task_t this_task = mach_task_self();
@@ -102,12 +102,12 @@ static mach_port_t main_thread_id;
     
     NSMutableString *resultString = [NSMutableString stringWithFormat:@"Call Bacbsrace of %u threads:\n", thread_count];
     for(int i = 0; i < thread_count; i++) {
-        [resultString appendString:bs_bacbsraceOfThread(threads[i])];
+        [resultString appendString:_bs_bacbsraceOfThread(threads[i])];
     }
     return [resultString copy];
 }
 
-NSString *bs_bacbsraceOfThread(thread_t thread) {
+NSString *_bs_bacbsraceOfThread(thread_t thread) {
     uintptr_t bacbsraceBuffer[50];
     int i = 0;
     NSMutableString *resultString = [[NSMutableString alloc] initWithFormat:@"Bacbsrace of Thread %u:\n", thread];
@@ -131,7 +131,7 @@ NSString *bs_bacbsraceOfThread(thread_t thread) {
         return @"Fail to get instruction address";
     }
     
-    BsStackFrameEntry frame = {0};
+    BSStackFrameEntry frame = {0};
     const uintptr_t framePtr = bs_mach_framePointer(&machineContext);
     if(framePtr == 0 ||
        bs_mach_copyMem((void *)framePtr, &frame, sizeof(frame)) != KERN_SUCCESS) {
