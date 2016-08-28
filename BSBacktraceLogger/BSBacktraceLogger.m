@@ -110,7 +110,7 @@ static mach_port_t main_thread_id;
 
 #pragma -mark Get call backtrace of a mach_thread
 NSString *_bs_backtraceOfThread(thread_t thread) {
-    uintptr_t bacbsraceBuffer[50];
+    uintptr_t backtraceBuffer[50];
     int i = 0;
     NSMutableString *resultString = [[NSMutableString alloc] initWithFormat:@"Backtrace of Thread %u:\n", thread];
     
@@ -120,12 +120,12 @@ NSString *_bs_backtraceOfThread(thread_t thread) {
     }
     
     const uintptr_t instructionAddress = bs_mach_instructionAddress(&machineContext);
-    bacbsraceBuffer[i] = instructionAddress;
+    backtraceBuffer[i] = instructionAddress;
     ++i;
     
     uintptr_t linkRegister = bs_mach_linkRegister(&machineContext);
     if (linkRegister) {
-        bacbsraceBuffer[i] = linkRegister;
+        backtraceBuffer[i] = linkRegister;
         i++;
     }
     
@@ -141,19 +141,19 @@ NSString *_bs_backtraceOfThread(thread_t thread) {
     }
     
     for(; i < INT_MAX; i++) {
-        bacbsraceBuffer[i] = frame.return_address;
-        if(bacbsraceBuffer[i] == 0 ||
+        backtraceBuffer[i] = frame.return_address;
+        if(backtraceBuffer[i] == 0 ||
            frame.previous == 0 ||
            bs_mach_copyMem(frame.previous, &frame, sizeof(frame)) != KERN_SUCCESS) {
             break;
         }
     }
     
-    int bacbsraceLength = i;
-    Dl_info symbolicated[bacbsraceLength];
-    bs_symbolicate(bacbsraceBuffer, symbolicated, bacbsraceLength, 0);
-    for (int i = 0; i < bacbsraceLength; ++i) {
-        [resultString appendFormat:@"%@", bs_logBacktraceEntry(i, bacbsraceBuffer[i], &symbolicated[i])];
+    int backtraceLength = i;
+    Dl_info symbolicated[backtraceLength];
+    bs_symbolicate(backtraceBuffer, symbolicated, backtraceLength, 0);
+    for (int i = 0; i < backtraceLength; ++i) {
+        [resultString appendFormat:@"%@", bs_logBacktraceEntry(i, backtraceBuffer[i], &symbolicated[i])];
     }
     [resultString appendFormat:@"\n"];
     return [resultString copy];
@@ -260,19 +260,19 @@ kern_return_t bs_mach_copyMem(const void *const src, void *const dst, const size
 }
 
 #pragma -mark Symbolicate
-void bs_symbolicate(const uintptr_t* const bacbsraceBuffer,
+void bs_symbolicate(const uintptr_t* const backtraceBuffer,
                     Dl_info* const symbolsBuffer,
                     const int numEntries,
                     const int skippedEntries){
     int i = 0;
     
     if(!skippedEntries && i < numEntries) {
-        bs_dladdr(bacbsraceBuffer[i], &symbolsBuffer[i]);
+        bs_dladdr(backtraceBuffer[i], &symbolsBuffer[i]);
         i++;
     }
     
     for(; i < numEntries; i++) {
-        bs_dladdr(CALL_INSTRUCTION_FROM_RETURN_ADDRESS(bacbsraceBuffer[i]), &symbolsBuffer[i]);
+        bs_dladdr(CALL_INSTRUCTION_FROM_RETURN_ADDRESS(backtraceBuffer[i]), &symbolsBuffer[i]);
     }
 }
 
