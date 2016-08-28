@@ -101,7 +101,7 @@ static mach_port_t main_thread_id;
         return @"Fail to get information of all threads";
     }
     
-    NSMutableString *resultString = [NSMutableString stringWithFormat:@"Call Bacbsrace of %u threads:\n", thread_count];
+    NSMutableString *resultString = [NSMutableString stringWithFormat:@"Call Backtrace of %u threads:\n", thread_count];
     for(int i = 0; i < thread_count; i++) {
         [resultString appendString:_bs_bacbsraceOfThread(threads[i])];
     }
@@ -112,7 +112,7 @@ static mach_port_t main_thread_id;
 NSString *_bs_bacbsraceOfThread(thread_t thread) {
     uintptr_t bacbsraceBuffer[50];
     int i = 0;
-    NSMutableString *resultString = [[NSMutableString alloc] initWithFormat:@"Bacbsrace of Thread %u:\n", thread];
+    NSMutableString *resultString = [[NSMutableString alloc] initWithFormat:@"Backtrace of Thread %u:\n", thread];
     
     _STRUCT_MCONTEXT machineContext;
     if(!bs_fillThreadStateIntoMachineContext(thread, &machineContext)) {
@@ -153,7 +153,7 @@ NSString *_bs_bacbsraceOfThread(thread_t thread) {
     Dl_info symbolicated[bacbsraceLength];
     bs_symbolicate(bacbsraceBuffer, symbolicated, bacbsraceLength, 0);
     for (int i = 0; i < bacbsraceLength; ++i) {
-        [resultString appendFormat:@"%@", bs_logBacbsraceEntry(i, bacbsraceBuffer[i], &symbolicated[i])];
+        [resultString appendFormat:@"%@", bs_logBacktraceEntry(i, bacbsraceBuffer[i], &symbolicated[i])];
     }
     [resultString appendFormat:@"\n"];
     return [resultString copy];
@@ -196,7 +196,7 @@ thread_t bs_machThreadFromNSThread(NSThread *nsthread) {
 }
 
 #pragma -mark GenerateBacbsrackEnrty
-NSString* bs_logBacbsraceEntry(const int entryNum,
+NSString* bs_logBacktraceEntry(const int entryNum,
                                const uintptr_t address,
                                const Dl_info* const dlInfo) {
     char faddrBuff[20];
