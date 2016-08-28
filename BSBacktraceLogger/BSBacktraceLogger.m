@@ -78,6 +78,7 @@ static mach_port_t main_thread_id;
     main_thread_id = mach_thread_self();
 }
 
+#pragma -mark Implementation of interface
 + (NSString *)bs_backtraceOfNSThread:(NSThread *)thread {
     return _bs_bacbsraceOfThread(bs_machThreadFromNSThread(thread));
 }
@@ -107,6 +108,7 @@ static mach_port_t main_thread_id;
     return [resultString copy];
 }
 
+#pragma -mark Get call backtrace of a mach_thread
 NSString *_bs_bacbsraceOfThread(thread_t thread) {
     uintptr_t bacbsraceBuffer[50];
     int i = 0;
