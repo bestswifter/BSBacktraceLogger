@@ -1,11 +1,11 @@
-# BsBacktraceLogger —— 轻量级调用栈分析器
+# BSBacktraceLogger —— 轻量级调用栈分析器
 
 这是一个强大且轻量的线程调用栈分析器，只有一个类，四百行代码。它支持现有所有模拟器、真机的 CPU 架构，可以获取任意线程的调用栈，因此可以在检测到 runloop 检测到卡顿时获取卡顿处的代码执行情况。
 
 ## 用法
 
 ```objc
-#import "BsBacktraceLogger.h"
+#import "BSBacktraceLogger.h"
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -28,14 +28,14 @@
 }
 ```
 
-定义了三个宏用于快速输出，或者调用 `[BsBacktraceLogger backtraceOfCurrentThread]` 等函数获取字符串格式的调用栈。
+定义了三个宏用于快速输出，或者调用 `[BSBacktraceLogger bs_backtraceOfCurrentThread]` 等函数获取字符串格式的调用栈。
 
 ## 样例
 
 上述代码中，`BSLOG_MAIN` 这个宏的输出结果如下:
 
 ```objc
-2016-08-27 18:33:20.017 KtBacktraceLogger[25215:862569] Bacbsrace of Thread 1803:
+2016-08-27 18:33:20.017 BSBacktraceLogger[25215:862569] Backtrace of Thread 1803:
 KtBacktraceLogger               0x10b831f4c -[ViewController bar] + 12
 KtBacktraceLogger               0x10b831f2b -[ViewController foo] + 43
 KtBacktraceLogger               0x10b831fe0 -[ViewController viewDidLoad] + 128
@@ -64,4 +64,4 @@ libdyld.dylib                   0x10ea9c92d start + 1
 
 Xcode 的调试输出不稳定，有时候存在调用 `NSLog()` 但没有输出结果的情况，建议前往 **控制台** 中根据设备的 UUID 查看完整输出。
 
-真机调试时，为了优化，某些符号表并不在内存中，而是存储在磁盘上的 dSYM 文件中，无法在运行时解析，因此符号名称显示为 `<redacted>`。
+真机调试和使用 Release 模式时，为了优化，某些符号表并不在内存中，而是存储在磁盘上的 dSYM 文件中，无法在运行时解析，因此符号名称显示为 `<redacted>`。
