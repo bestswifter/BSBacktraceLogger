@@ -66,7 +66,7 @@
 #endif
 
 typedef struct BSStackFrameEntry{
-    const struct SunFrameEntry *const previous;
+    const struct BSStackFrameEntry *const previous;
     const uintptr_t return_address;
 } BSStackFrameEntry;
 
