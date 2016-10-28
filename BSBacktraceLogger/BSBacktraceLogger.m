@@ -140,7 +140,7 @@ NSString *_bs_backtraceOfThread(thread_t thread) {
         return @"Fail to get frame pointer";
     }
     
-    for(; i < INT_MAX; i++) {
+    for(; i < 50; i++) {
         backtraceBuffer[i] = frame.return_address;
         if(backtraceBuffer[i] == 0 ||
            frame.previous == 0 ||
