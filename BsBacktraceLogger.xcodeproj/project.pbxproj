@@ -270,7 +270,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				INFOPLIST_FILE = BSBacktraceLogger/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = baidu.BSBacktraceLogger;
+				PRODUCT_BUNDLE_IDENTIFIER = bestswifter.BSBacktraceLogger;
 				PRODUCT_NAME = BSBacktraceLogger;
 			};
 			name = Debug;
@@ -282,7 +282,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				INFOPLIST_FILE = BSBacktraceLogger/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = baidu.BSBacktraceLogger;
+				PRODUCT_BUNDLE_IDENTIFIER = bestswifter.BSBacktraceLogger;
 				PRODUCT_NAME = BSBacktraceLogger;
 			};
 			name = Release;
