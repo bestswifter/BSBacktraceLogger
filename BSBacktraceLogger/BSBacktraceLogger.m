@@ -166,32 +166,21 @@ thread_t bs_machThreadFromNSThread(NSThread *nsthread) {
     thread_act_array_t list;
     task_threads(mach_task_self(), &list, &count);
     
-    NSTimeInterval currentTimestamp = [[NSDate date] timeIntervalSince1970];
-    NSString *originName = [nsthread name];
-    [nsthread setName:[NSString stringWithFormat:@"%f", currentTimestamp]];
-    
     if ([nsthread isMainThread]) {
         return (thread_t)main_thread_id;
     }
     
     for (int i = 0; i < count; ++i) {
         pthread_t pt = pthread_from_mach_thread_np(list[i]);
-        if ([nsthread isMainThread]) {
-            if (list[i] == main_thread_id) {
-                return list[i];
-            }
-        }
         if (pt) {
             name[0] = '\0';
             pthread_getname_np(pt, name, sizeof name);
             if (!strcmp(name, [nsthread name].UTF8String)) {
-                [nsthread setName:originName];
                 return list[i];
             }
         }
     }
     
-    [nsthread setName:originName];
     return mach_thread_self();
 }
 
