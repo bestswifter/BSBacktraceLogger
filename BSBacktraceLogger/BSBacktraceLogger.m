@@ -24,6 +24,8 @@
 #define BS_FRAME_POINTER __fp
 #define BS_STACK_POINTER __sp
 #define BS_INSTRUCTION_ADDRESS __pc
+#define BS_INSTRUCTION_NORMALISE_VALUE 0x0000000fffffffff
+
 
 #elif defined(__arm__)
 #define DETAG_INSTRUCTION_ADDRESS(A) ((A) & ~(1UL))
@@ -32,6 +34,7 @@
 #define BS_FRAME_POINTER __r[7]
 #define BS_STACK_POINTER __sp
 #define BS_INSTRUCTION_ADDRESS __pc
+#define BS_INSTRUCTION_NORMALISE_VALUE 0xfffffffffffffffff
 
 #elif defined(__x86_64__)
 #define DETAG_INSTRUCTION_ADDRESS(A) (A)
@@ -40,6 +43,7 @@
 #define BS_FRAME_POINTER __rbp
 #define BS_STACK_POINTER __rsp
 #define BS_INSTRUCTION_ADDRESS __rip
+#define BS_INSTRUCTION_NORMALISE_VALUE 0xfffffffffffffffff
 
 #elif defined(__i386__)
 #define DETAG_INSTRUCTION_ADDRESS(A) (A)
@@ -48,6 +52,7 @@
 #define BS_FRAME_POINTER __ebp
 #define BS_STACK_POINTER __esp
 #define BS_INSTRUCTION_ADDRESS __eip
+#define BS_INSTRUCTION_NORMALISE_VALUE 0xfffffffffffffffff
 
 #endif
 
@@ -125,7 +130,7 @@ NSString *_bs_backtraceOfThread(thread_t thread) {
     
     uintptr_t linkRegister = bs_mach_linkRegister(&machineContext);
     if (linkRegister) {
-        backtraceBuffer[i] = linkRegister;
+        backtraceBuffer[i] = linkRegister & BS_INSTRUCTION_NORMALISE_VALUE;
         i++;
     }
     
@@ -141,7 +146,7 @@ NSString *_bs_backtraceOfThread(thread_t thread) {
     }
     
     for(; i < 50; i++) {
-        backtraceBuffer[i] = frame.return_address;
+        backtraceBuffer[i] = frame.return_address & BS_INSTRUCTION_NORMALISE_VALUE;
         if(backtraceBuffer[i] == 0 ||
            frame.previous == 0 ||
            bs_mach_copyMem(frame.previous, &frame, sizeof(frame)) != KERN_SUCCESS) {
@@ -243,7 +248,7 @@ uintptr_t bs_mach_stackPointer(mcontext_t const machineContext){
 }
 
 uintptr_t bs_mach_instructionAddress(mcontext_t const machineContext){
-    return machineContext->__ss.BS_INSTRUCTION_ADDRESS;
+    return machineContext->__ss.BS_INSTRUCTION_ADDRESS & BS_INSTRUCTION_NORMALISE_VALUE;
 }
 
 uintptr_t bs_mach_linkRegister(mcontext_t const machineContext){
