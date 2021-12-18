@@ -12,7 +12,6 @@
 		9BD96D1A1D71AA630046048A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9BD96D0E1D71AA630046048A /* LaunchScreen.storyboard */; };
 		9BD96D1B1D71AA630046048A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9BD96D101D71AA630046048A /* Main.storyboard */; };
 		9BD96D1C1D71AA630046048A /* BSBacktraceLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BD96D131D71AA630046048A /* BSBacktraceLogger.m */; };
-		9BD96D1D1D71AA630046048A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9BD96D141D71AA630046048A /* Info.plist */; };
 		9BD96D1E1D71AA630046048A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BD96D151D71AA630046048A /* main.m */; };
 		9BD96D1F1D71AA630046048A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BD96D171D71AA630046048A /* ViewController.m */; };
 /* End PBXBuildFile section */
@@ -113,11 +112,12 @@
 					};
 				};
 			};
-			buildConfigurationList = 9BA9BB4A1D6FEA4C00A579CA /* Build configuration list for PBXProject "BSBacktraceLogger" */;
+			buildConfigurationList = 9BA9BB4A1D6FEA4C00A579CA /* Build configuration list for PBXProject "BsBacktraceLogger" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -139,7 +139,6 @@
 				9BD96D191D71AA630046048A /* Assets.xcassets in Resources */,
 				9BD96D1B1D71AA630046048A /* Main.storyboard in Resources */,
 				9BD96D1A1D71AA630046048A /* LaunchScreen.storyboard in Resources */,
-				9BD96D1D1D71AA630046048A /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,7 +289,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		9BA9BB4A1D6FEA4C00A579CA /* Build configuration list for PBXProject "BSBacktraceLogger" */ = {
+		9BA9BB4A1D6FEA4C00A579CA /* Build configuration list for PBXProject "BsBacktraceLogger" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9BA9BB641D6FEA4C00A579CA /* Debug */,
