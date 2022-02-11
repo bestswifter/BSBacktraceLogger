@@ -15,6 +15,7 @@
 #include <string.h>
 #include <mach-o/dyld.h>
 #include <mach-o/nlist.h>
+#include <mach-o/arch.h>
 
 #pragma -mark DEFINE MACRO FOR DIFFERENT CPU ARCHITECTURE
 #if defined(__arm64__)
@@ -64,6 +65,20 @@
 #define POINTER_SHORT_FMT "0x%lx"
 #define BS_NLIST struct nlist
 #endif
+
+
+#define CRASH_ARM64_PTR_MASK 0x0000000FFFFFFFFF
+
+uintptr_t wx_normaliseInstructionPointer(uintptr_t ip)
+{
+#if defined(__arm64__)
+    const NXArchInfo *info = NXGetLocalArchInfo();
+    if (info != NULL && info->cpusubtype == CPU_SUBTYPE_ARM64E) {
+        return ip & CRASH_ARM64_PTR_MASK;
+    }
+#endif
+    return ip;
+}
 
 typedef struct BSStackFrameEntry{
     const struct BSStackFrameEntry *const previous;
@@ -141,7 +156,7 @@ NSString *_bs_backtraceOfThread(thread_t thread) {
     }
     
     for(; i < 50; i++) {
-        backtraceBuffer[i] = frame.return_address;
+        backtraceBuffer[i] = wx_normaliseInstructionPointer(frame.return_address);
         if(backtraceBuffer[i] == 0 ||
            frame.previous == 0 ||
            bs_mach_copyMem(frame.previous, &frame, sizeof(frame)) != KERN_SUCCESS) {
