@@ -2,21 +2,18 @@
 //  BSBacktraceLogger.h
 //  BSBacktraceLogger
 //
-//  Created by 张星宇 on 16/8/27.
-//  Copyright © 2016年 bestswifter. All rights reserved.
+//  Created by Ruswan Efendi on 29/03/22.
+//  Copyright © 2022 Ruswan Efendi. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-#define BSLOG NSLog(@"%@",[BSBacktraceLogger bs_backtraceOfCurrentThread]);
-#define BSLOG_MAIN NSLog(@"%@",[BSBacktraceLogger bs_backtraceOfMainThread]);
-#define BSLOG_ALL NSLog(@"%@",[BSBacktraceLogger bs_backtraceOfAllThread]);
+//! Project version number for BSBacktraceLogger.
+FOUNDATION_EXPORT double BSBacktraceLoggerVersionNumber;
 
-@interface BSBacktraceLogger : NSObject
+//! Project version string for BSBacktraceLogger.
+FOUNDATION_EXPORT const unsigned char BSBacktraceLoggerVersionString[];
 
-+ (NSString *)bs_backtraceOfAllThread;
-+ (NSString *)bs_backtraceOfCurrentThread;
-+ (NSString *)bs_backtraceOfMainThread;
-+ (NSString *)bs_backtraceOfNSThread:(NSThread *)thread;
+// In this header, you should import all the public headers of your framework using statements like #import <BSBacktraceLogger/PublicHeader.h>
 
-@end
+#import "BSLogger.h"

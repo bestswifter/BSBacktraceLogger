@@ -3,10 +3,10 @@
 //  BSBacktraceLogger
 //
 //  Created by 张星宇 on 16/8/27.
-//  Copyright © 2016年 bestswifter. All rights reserved.
+//  Copyright © 2022 Ruswan Efendi. All rights reserved.
 //
 
-#import "BSBacktraceLogger.h"
+#import "BSLogger.h"
 #import <mach/mach.h>
 #include <dlfcn.h>
 #include <pthread.h>
@@ -72,7 +72,7 @@ typedef struct BSStackFrameEntry{
 
 static mach_port_t main_thread_id;
 
-@implementation BSBacktraceLogger
+@implementation BSLogger
 
 + (void)load {
     main_thread_id = mach_thread_self();
